@@ -10,7 +10,7 @@ CS324
 2. client.c
  
 2a. What two system calls are required to create and prepare a client socket for use?
--
+-D
  
 2b. Start a netcat ("nc" command) server listening for incoming UDP datagrams on a port of your choosing (but should be above 1023).  Show the command line you used.
  
