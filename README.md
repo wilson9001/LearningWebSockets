@@ -1,8 +1,7 @@
 # LearningWebSockets
 CS324
 --------------------------------------------------
-1. Setup
- 
+
 1a. Download hw5.tar.gz and un-tar/gzip it to a directory.
  
 1b. Run "make" to build two executables: client and server.
@@ -61,15 +60,42 @@ CS324
 
 2d. Modify client.c such that: 1) it sleeps for 2 seconds immediately before writing each argument to the the socket that has been established; and 2) it does not attempt to read from the socket--or print what it read--after writing to to the socket.  For #2, comment out the appropriate code rather than removing it (you'll want to use it later).  Re-make to compile the changes.  Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
 
-	
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ sha1sum -b client
+	992fd6bd959935f26ffa47bea0b112ba50405197 *client
  
 2e. While the netcat server is still running, execute the client program in a different window, such that it sends the following strings, separately, to the netcat server via a UDP socket: foo, bar, baz, and catvideo.  Show: 1) the command-line you used to run the client program; and 2) the console output from the netcat server (not the client).
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ ./client localhost 1234 foo bar baz catvideo
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ foobarbazcatvideo
  
 2f.  While the client program is running (you might need to restart the server and client, if your run from 2e already finished), run netstat in a separate window to show only non-listening UDP "connections" (even though UDP is connectionless, sometimes "connection" is still used to describe client-server UDP communications).  Again, use the "-n" option to show addresses instead of names.  Show the command line you used and its output (Hint: your nc "connection" should show up in the list).
- 
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -upn
+	(Not all processes could be identified, non-owned process info
+	will not be shown, you would have to be root to see it all.)
+	Active Internet connections (w/o servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	udp        0      0 127.0.0.1:55848         127.0.0.1:1234          ESTABLISHED 26657/client    
+	udp        0      0 127.0.0.1:1234          127.0.0.1:55848         ESTABLISHED 26648/nc
+
 2g. When the client program has finished running, interrupt the netcat server also, so that it is no longer running.  Now repeat the netstat command from 2f.  Show the command line you used and its output.
- 
- 
+
+	----I'm not sure if you want me to pause or terminate the process, since both SIGSTP and SIGINT interrupt the flow of the program and make it stop running. I'll put the output from the job stopped first and then when it is terminated.
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -upn
+	(Not all processes could be identified, non-owned process info
+	will not be shown, you would have to be root to see it all.)
+	Active Internet connections (w/o servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	udp        0      0 127.0.0.1:1234          127.0.0.1:55848         ESTABLISHED 26648/nc
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -upn
+	(Not all processes could be identified, non-owned process info
+	will not be shown, you would have to be root to see it all.)
+	Active Internet connections (w/o servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+
 3. client.c - TCP
  
 3a. Modify client.c, such that TCP is used instead of UDP.  Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
