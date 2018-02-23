@@ -99,18 +99,173 @@ CS324
 3. client.c - TCP
  
 3a. Modify client.c, such that TCP is used instead of UDP.  Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
- 
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ sha1sum -b client
+	374d0b70843610cd78bc48cf6c5605d60c9500c8 *client
+
 3b. Start a netcat ("nc" command) server listening for incoming TCP datagrams on a port of your choosing (but should be above 1023).  Show the command line you used.
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ nc -l 1234
+
 3c. Use the netstat command to show only the services *listening* on TCP ports.  Also, have it display the PIDs/command names for the services for which you are the owner.  Finally, use the "-n" option to have it show addresses instead of names.  Show the command line you used and its output (Hint: your nc service should show up in the list. Hint 2: you should not be piping your output to grep or any other program--this can/should be done using only command-line options for netstat.  See the man page for these options).
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -tlpn
+	(Not all processes could be identified, non-owned process info
+	will not be shown, you would have to be root to see it all.)
+	Active Internet connections (only servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	tcp        0      0 0.0.0.0:1234            0.0.0.0:*               LISTEN      29127/nc        
+	tcp        0      0 127.0.1.1:53            0.0.0.0:*               LISTEN      -               
+	tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      -               
+	tcp6       0      0 :::80                   :::*                    LISTEN      -               
+	tcp6       0      0 ::1:631                 :::*                    LISTEN      -
+
 3d. While the netcat server is still running, execute the client program in a different window, such that it sends the following strings, separately, to the netcat server via a TCP socket: foo, bar, baz, and catvideo.  Show: 1) the command-line you used to run the client program; and 2) the console output from the netcat server (not the client).
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ ./client localhost 1234 foo bar baz catvideo &
+	
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ foobarbazcatvideo
+
 3e.  While the client program is running (you might need to restart the server and client, if your run from 3d already finished), run netstat in a separate window to show only non-listening TCP connections.  Again, use the "-n" option to show addresses instead of names.  Show the command line you used and its output (Hint: your nc connection should show up in the list).
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -tpn
+	(Not all processes could be identified, non-owned process info
+	will not be shown, you would have to be root to see it all.)
+	Active Internet connections (w/o servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	tcp        0      0 10.0.2.15:48290         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55776         54.225.64.197:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55778         54.225.64.197:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45374         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:36138         72.21.91.29:80          CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:46764         23.23.199.103:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48262         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:51244         54.221.212.171:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55360         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:51236         54.221.212.171:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 127.0.0.1:38680         127.0.0.1:1234          ESTABLISHED 31063/client    
+	tcp        0      0 10.0.2.15:55408         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:38168         178.62.110.224:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55452         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55500         50.17.199.74:443        CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55406         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45368         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48286         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:39072         23.23.74.204:443        CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45372         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:38170         178.62.110.224:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48292         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55488         50.17.199.74:443        CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55358         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 127.0.0.1:1234          127.0.0.1:38680         ESTABLISHED 31024/nc        
+	tcp        1      0 10.0.2.15:48282         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:48280         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55454         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp       32      0 10.0.2.15:55404         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45370         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp       32      0 10.0.2.15:55432         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55436         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55356         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:46766         23.23.199.103:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55456         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48288         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48914         184.73.188.164:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55434         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:36998         54.186.123.227:443      ESTABLISHED 28418/firefox   
+	tcp        1      0 10.0.2.15:55376         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+
 3f. When the client program has finished running, interrupt the netcat server also, so that it is no longer running.  Now repeat the netstat command from 3e.  Show the command line you used and its output.
  
+	----I'm not sure if you want me to pause or terminate the process, since both SIGSTP and SIGINT interrupt the flow of the program and make it stop running. I'll put the output from the job stopped first and then when it is terminated.
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -tpn
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	tcp        0      0 10.0.2.15:48290         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55776         54.225.64.197:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55778         54.225.64.197:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45374         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:36138         72.21.91.29:80          CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:46764         23.23.199.103:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48262         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:51244         54.221.212.171:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55360         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:51236         54.221.212.171:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55408         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:38168         178.62.110.224:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55452         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55500         50.17.199.74:443        CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55406         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45368         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48286         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:39072         23.23.74.204:443        CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45372         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:38170         178.62.110.224:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48292         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55488         50.17.199.74:443        CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55358         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:48282         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:48280         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55454         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp       32      0 10.0.2.15:55404         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45370         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp       32      0 10.0.2.15:55432         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55436         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55356         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:46766         23.23.199.103:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55456         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48288         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48914         184.73.188.164:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55434         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:36998         54.186.123.227:443      ESTABLISHED 28418/firefox   
+	tcp        1      0 10.0.2.15:55376         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -tpn
+	(Not all processes could be identified, non-owned process info
+	will not be shown, you would have to be root to see it all.)
+	Active Internet connections (w/o servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	tcp        0      0 10.0.2.15:48290         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55776         54.225.64.197:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55778         54.225.64.197:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45374         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:36138         72.21.91.29:80          CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:46764         23.23.199.103:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48262         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:51244         54.221.212.171:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55360         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:51236         54.221.212.171:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55408         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:38168         178.62.110.224:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55452         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55500         50.17.199.74:443        CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55406         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45368         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48286         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:39072         23.23.74.204:443        CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45372         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:38170         178.62.110.224:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48292         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55488         50.17.199.74:443        CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:55358         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:48282         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:48280         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55454         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp       32      0 10.0.2.15:55404         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:45370         96.126.102.55:443       CLOSE_WAIT  20786/code --unity-
+	tcp       32      0 10.0.2.15:55432         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55436         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55356         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        1      0 10.0.2.15:46766         23.23.199.103:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55456         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48288         151.101.40.133:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:48914         184.73.188.164:443      CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:55434         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+	tcp        0      0 10.0.2.15:36998         54.186.123.227:443      ESTABLISHED 28418/firefox   
+	tcp        1      0 10.0.2.15:55376         50.17.211.206:443       CLOSE_WAIT  20786/code --unity-
+
 4. server.c - TCP
  
 4a. Modify server.c such that the server socket communicates over TCP instead of UDP: 1) prior to the second "for" loop (i.e., "for (;;)"), use the listen() function on the TCP server socket (you can use a backlog value of 100); 2) immediately after the call to listen(), use the accept() function to wait for a client to connect and create/return a new client socket (note that you can re-use some of the arguments from recvfrom() below); 3) change the recvfrom() call to recv() (note that you just need to remove some of the arguments); and 4) break out of the loop if recv() returns 0 bytes.  Re-make.  Determine the SHA1 sum of the newly compiled binary file for the server (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
@@ -131,7 +286,7 @@ Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Sho
  
 5b. Start a netcat ("nc" command) server listening for incoming TCP connections on a port of your choosing, and such that its output is piped to the sha1sum command.   Then test your client program by redirecting the contents of alpha.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show: 1) the pipeline you used to run nc, and its output (after the client finished executing); and 2) the command line you used to run the client program.  The output of the nc pipeline should equal the following: 0ef39a3f241cdd6552ad131e01afa9171b3dab8d
  
-5c. Modify client.c, such that after all the data read from stdin has been sent to the socket, the server reads from the socket and prints it out to stdout (you should be able to use the code you commented out in 2d).  Then execute your your client program such that 1) you are sending data to the standard HTTP port at www.sandia.gov;  and that 2) you are redirecting the contents of file-http.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show the command line you used to run the client program and its output.  Note that it should result in an HTTP/1.1 200 OK response.
+5c. Modify client.c, such that after all the data read from stdin has been sent to the socket, the server reads from the socket and prints it out to stdout (you should be able to use the code you commented out in 2d).  Then execute your client program such that 1) you are sending data to the standard HTTP port at www.sandia.gov;  and that 2) you are redirecting the contents of file-http.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show the command line you used to run the client program and its output.  Note that it should result in an HTTP/1.1 200 OK response.
  
 Submission
 Please include 1) the final modified source code for client.c and server.c, and 2) the output/writeup from requested from each of the numbered items above, in a single file
