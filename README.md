@@ -10,13 +10,58 @@ CS324
 2. client.c
  
 2a. What two system calls are required to create and prepare a client socket for use?
--D
+
+	socket() and connect()
  
 2b. Start a netcat ("nc" command) server listening for incoming UDP datagrams on a port of your choosing (but should be above 1023).  Show the command line you used.
- 
+
+	nc -ul 1234 &
+
 2c. Use the netstat command to show only the services *listening* on UDP ports.  Also, have it display the PIDs/command names for the services for which you are the owner.  Finally, use the "-n" option to have it show addresses instead of names.  Show the command line you used and its output (Hint: your nc service should show up in the list. Hint 2: you should not be piping your output to grep or any other program--this can/should be done using only command-line options for netstat.  See the man page for these options).
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -ulp
+	(Not all processes could be identified, non-owned process info
+	 will not be shown, you would have to be root to see it all.)
+	Active Internet connections (only servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	udp        0      0 *:54647                 *:*                                 -               
+	udp        0      0 alex-Mint:domain        *:*                                 -               
+	udp        0      0 *:bootpc                *:*                                 -               
+	udp        0      0 10.0.2.15:ntp           *:*                                 -               
+	udp        0      0 localhost:ntp           *:*                                 -               
+	udp        0      0 *:ntp                   *:*                                 -               
+	udp        0      0 *:1234                  *:*                                 16120/nc        
+	udp        0      0 *:43734                 *:*                                 -               
+	udp        0      0 *:mdns                  *:*                                 -               
+	udp6       0      0 fe80::b0e3:6f59:a7e:ntp [::]:*                              -               
+	udp6       0      0 ip6-localhost:ntp       [::]:*                              -               
+	udp6       0      0 [::]:ntp                [::]:*                              -               
+	udp6       0      0 [::]:42511              [::]:*                              -               
+	udp6       0      0 [::]:mdns               [::]:*                              -
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ netstat -ulpn
+	(Not all processes could be identified, non-owned process info
+	 will not be shown, you would have to be root to see it all.)
+	Active Internet connections (only servers)
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	udp        0      0 0.0.0.0:54647           0.0.0.0:*                           -               
+	udp        0      0 127.0.1.1:53            0.0.0.0:*                           -               
+	udp        0      0 0.0.0.0:68              0.0.0.0:*                           -               
+	udp        0      0 10.0.2.15:123           0.0.0.0:*                           -               
+	udp        0      0 127.0.0.1:123           0.0.0.0:*                           -               
+	udp        0      0 0.0.0.0:123             0.0.0.0:*                           -               
+	udp        0      0 0.0.0.0:1234            0.0.0.0:*                           16120/nc        
+	udp        0      0 0.0.0.0:43734           0.0.0.0:*                           -               
+	udp        0      0 0.0.0.0:5353            0.0.0.0:*                           -               
+	udp6       0      0 fe80::b0e3:6f59:a7e:123 :::*                                -               
+	udp6       0      0 ::1:123                 :::*                                -               
+	udp6       0      0 :::123                  :::*                                -               
+	udp6       0      0 :::42511                :::*                                -               
+	udp6       0      0 :::5353                 :::*                                -
+
 2d. Modify client.c such that: 1) it sleeps for 2 seconds immediately before writing each argument to the the socket that has been established; and 2) it does not attempt to read from the socket--or print what it read--after writing to to the socket.  For #2, comment out the appropriate code rather than removing it (you'll want to use it later).  Re-make to compile the changes.  Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
+
+	
  
 2e. While the netcat server is still running, execute the client program in a different window, such that it sends the following strings, separately, to the netcat server via a UDP socket: foo, bar, baz, and catvideo.  Show: 1) the command-line you used to run the client program; and 2) the console output from the netcat server (not the client).
  
