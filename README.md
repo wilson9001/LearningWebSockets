@@ -269,13 +269,21 @@ Proto Recv-Q Send-Q Local Address           Foreign Address         State       
 4. server.c - TCP
  
 4a. Modify server.c such that the server socket communicates over TCP instead of UDP: 1) prior to the second "for" loop (i.e., "for (;;)"), use the listen() function on the TCP server socket (you can use a backlog value of 100); 2) immediately after the call to listen(), use the accept() function to wait for a client to connect and create/return a new client socket (note that you can re-use some of the arguments from recvfrom() below); 3) change the recvfrom() call to recv() (note that you just need to remove some of the arguments); and 4) break out of the loop if recv() returns 0 bytes.  Re-make.  Determine the SHA1 sum of the newly compiled binary file for the server (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
- 
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ sha1sum -b server
+	2d67dbf6e30264ba2a27bf0aa9ef55d338f7bd12 *server
+
 4b. Run the server program to listen on a port of your choosing (but should be above 1023).  While the server program is running, execute the client program in a different window, such that it sends the following strings, separately, to the server program via a TCP socket: foo, bar, baz, and catvideo.  Show: 1) the command-line you used to run the server program; and 2) the command-line you used to run the client program, and the output from the client (not the server).
  
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ ./server 1234
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ ./client localhost 1234 foo bar baz catvideo
+
 [Please note: because you commented out the read/print portion of the client code, there will be no output to the console (nor reading from the socket) for problem 4b.  This outcome wasn't necessarily intentional, but it needs to stay this way because if you uncomment the code from 2d now, it will affect later homework problems.]
  
 4c. Why is there a difference between handling of "connections" at the server with TCP and with UDP?
  
+	UDP basically sends datagrams and you just kind of hope that they all arrive properly, whereas TCP connects the two endpoints with a bytestream and remains connected continuously via this stream until the transmission is complete.
  
 5. Client modification
  
@@ -284,6 +292,8 @@ Proto Recv-Q Send-Q Local Address           Foreign Address         State       
 2) After *all* data has been read from stdin (i.e., EOF has been reached), loop to send the data in the buffer until it has all been sent.  Note that write() will return the number of bytes actually sent, which might be less than the number you requested to be sent (see the man page for more!), so you need to loop to ensure that all has been sent.  This is important not only for this lab but for future labs.
 Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
  
+	
+
 5b. Start a netcat ("nc" command) server listening for incoming TCP connections on a port of your choosing, and such that its output is piped to the sha1sum command.   Then test your client program by redirecting the contents of alpha.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show: 1) the pipeline you used to run nc, and its output (after the client finished executing); and 2) the command line you used to run the client program.  The output of the nc pipeline should equal the following: 0ef39a3f241cdd6552ad131e01afa9171b3dab8d
  
 5c. Modify client.c, such that after all the data read from stdin has been sent to the socket, the server reads from the socket and prints it out to stdout (you should be able to use the code you commented out in 2d).  Then execute your client program such that 1) you are sending data to the standard HTTP port at www.sandia.gov;  and that 2) you are redirecting the contents of file-http.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show the command line you used to run the client program and its output.  Note that it should result in an HTTP/1.1 200 OK response.

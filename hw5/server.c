@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
-	hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
+	hints.ai_socktype = SOCK_STREAM; /* TCP socket */
 	hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
 	hints.ai_protocol = 0;          /* Any protocol */
 	hints.ai_canonname = NULL;
@@ -63,10 +63,25 @@ int main(int argc, char *argv[]) {
 
 	/* Read datagrams and echo them back to sender */
 
+	if (listen(sfd, 1023) != 0)
+	{
+		fprintf(stderr, "Couldn't listen on file descriptor %d\n", sfd);
+		exit(EXIT_FAILURE);
+	}
+
+	int clientSocketFD = accept(sfd, (struct sockaddr *) &peer_addr, &peer_addr_len);
+	if(clientSocketFD < 0)
+	{
+		fprintf(stderr, "Failed to accept connection front client!\n");
+		exit(EXIT_FAILURE);
+	}
+
 	for (;;) {
 		peer_addr_len = sizeof(struct sockaddr_storage);
-		nread = recvfrom(sfd, buf, BUF_SIZE, 0,
-				(struct sockaddr *) &peer_addr, &peer_addr_len);
+		nread = recv(clientSocketFD, buf, BUF_SIZE, 0);
+		if(nread == 0)
+			break;
+
 		if (nread == -1)
 			continue;               /* Ignore failed request */
 
