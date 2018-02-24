@@ -292,11 +292,26 @@ Proto Recv-Q Send-Q Local Address           Foreign Address         State       
 2) After *all* data has been read from stdin (i.e., EOF has been reached), loop to send the data in the buffer until it has all been sent.  Note that write() will return the number of bytes actually sent, which might be less than the number you requested to be sent (see the man page for more!), so you need to loop to ensure that all has been sent.  This is important not only for this lab but for future labs.
 Determine the SHA1 sum of the newly compiled binary file (see man sha1sum).  Show the command line you used to discover the SHA1 sum and its output.
  
-	
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ sha1sum -b client
+	5594fc2dd365ff4e54d66220eebd840bbbc4eae6 *client
 
 5b. Start a netcat ("nc" command) server listening for incoming TCP connections on a port of your choosing, and such that its output is piped to the sha1sum command.   Then test your client program by redirecting the contents of alpha.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show: 1) the pipeline you used to run nc, and its output (after the client finished executing); and 2) the command line you used to run the client program.  The output of the nc pipeline should equal the following: 0ef39a3f241cdd6552ad131e01afa9171b3dab8d
- 
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ nc -l 1234 | sha1sum
+	0ef39a3f241cdd6552ad131e01afa9171b3dab8d  -
+
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ cat alpha.txt | ./client localhost 1234
+
 5c. Modify client.c, such that after all the data read from stdin has been sent to the socket, the server reads from the socket and prints it out to stdout (you should be able to use the code you commented out in 2d).  Then execute your client program such that 1) you are sending data to the standard HTTP port at www.sandia.gov;  and that 2) you are redirecting the contents of file-http.txt (from the tar file) to the program's standard input (using input redirection on the shell).  Show the command line you used to run the client program and its output.  Note that it should result in an HTTP/1.1 200 OK response.
- 
+	
+	alex@alex-Mint ~/Documents/LearningWebSockets/hw5 $ cat file-http.txt | ./client www.sandia.gov 80
+	Received 215 bytes: HTTP/1.1 200 OK
+	Date: Sat, 24 Feb 2018 06:02:04 GMT
+	Server: Apache
+	X-Frame-Options: SAMEORIGIN
+	Last-Modified: Mon, 22 Jan 2018 23:54:21 GMT
+	Vary: Accept-Encoding
+	Content-Type: text/html; charset=iso-8859-1
+
 Submission
 Please include 1) the final modified source code for client.c and server.c, and 2) the output/writeup from requested from each of the numbered items above, in a single file

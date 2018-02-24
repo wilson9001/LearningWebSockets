@@ -7,13 +7,14 @@
 #include <string.h>
 
 #define BUF_SIZE 500
+#define MAX_STDIN_BUF 4096
 
 int main(int argc, char *argv[]) {
 	struct addrinfo hints;
 	struct addrinfo *result, *rp;
 	int sfd, s, j;
 	size_t len;
-	//ssize_t nread;
+	ssize_t nread;
 	char buf[BUF_SIZE];
 
 	if (argc < 3) {
@@ -55,19 +56,42 @@ int main(int argc, char *argv[]) {
 	if (rp == NULL) {               /* No address succeeded */
 		fprintf(stderr, "Could not connect\n");
 		exit(EXIT_FAILURE);
-
 	}
 
 	freeaddrinfo(result);           /* No longer needed */
 
+	char inputArray[MAX_STDIN_BUF];// = NULL;
+
+	//printf("About to attempt fread()\n");
+
+	//FILE *stdinPointer = fdopen(STDIN_FILENO, "r");
+
+	size_t byteSizeOfInput = fread(inputArray, sizeof(char), MAX_STDIN_BUF, stdin/*stdinPointer*/);
+	size_t bytesSent = 0;
+	size_t bytesLeft = byteSizeOfInput;
+
+	//printf("About to enter write loop.\nFile descriptor is %d\nWriting %ld bytes.\n", sfd, byteSizeOfInput);
+
+	do
+	{
+		bytesSent += write(sfd, &inputArray[bytesSent], bytesLeft);
+
+		bytesLeft = byteSizeOfInput - bytesSent;
+
+		//inputArray += bytesSent;
+
+	}while(bytesLeft > 0);
+
+	//printf("Exited while loop.\n");
+
 	/* Send remaining command-line arguments as separate
 	   datagrams, and read responses from server */
-
+/*
 	for (j = 3; j < argc; j++) {
 		len = strlen(argv[j]) + 1;
 		/* +1 for terminating null byte */
 
-		if (len + 1 > BUF_SIZE) {
+		/*if (len + 1 > BUF_SIZE) {
 			fprintf(stderr,
 					"Ignoring long message in argument %d\n", j);
 			continue;
@@ -78,8 +102,8 @@ int main(int argc, char *argv[]) {
 		if (write(sfd, argv[j], len) != len) {
 			fprintf(stderr, "partial/failed write\n");
 			exit(EXIT_FAILURE);
-		}
-/*
+		}*/
+
 		nread = read(sfd, buf, BUF_SIZE);
 		if (nread == -1) {
 			perror("read");
@@ -87,7 +111,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		printf("Received %zd bytes: %s\n", nread, buf);
-*/	}
+	//}
 
 	exit(EXIT_SUCCESS);
 }

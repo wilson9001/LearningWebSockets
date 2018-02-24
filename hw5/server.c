@@ -7,6 +7,7 @@
 #include <netdb.h>
 
 #define BUF_SIZE 500
+#define MAX_STDIN_BUF 4096
 
 int main(int argc, char *argv[]) {
 	struct addrinfo hints;
@@ -15,7 +16,7 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_storage peer_addr;
 	socklen_t peer_addr_len;
 	ssize_t nread;
-	char buf[BUF_SIZE];
+	char buf[MAX_STDIN_BUF];
 
 	if (argc != 2) {
 		fprintf(stderr, "Usage: %s port\n", argv[0]);
@@ -78,7 +79,7 @@ int main(int argc, char *argv[]) {
 
 	for (;;) {
 		peer_addr_len = sizeof(struct sockaddr_storage);
-		nread = recv(clientSocketFD, buf, BUF_SIZE, 0);
+		nread = recv(clientSocketFD, buf, MAX_STDIN_BUF, 0);
 		if(nread == 0)
 			break;
 
